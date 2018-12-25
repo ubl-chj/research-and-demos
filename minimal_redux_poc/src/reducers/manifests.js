@@ -1,31 +1,33 @@
 import manifesto from 'manifesto.js';
-import ActionTypes from '../action-types';
 
 /**
  * manifestsReducer
  */
 const manifestsReducer = (state = {}, action) => {
   switch (action.type) {
-    case ActionTypes.REQUEST_MANIFEST:
-      return Object.assign({}, state, {
-        [action.manifestId]: {
+    case 'REQUEST_MANIFEST':
+      return {
+        ...state,
+        [action.url]: {
           isFetching: true,
         },
-      });
-    case ActionTypes.RECEIVE_MANIFEST:
-      return Object.assign({}, state, {
-        [action.manifestId]: {
-          manifestation: manifesto.create(action.manifestJson),
+      };
+    case 'RESOLVE_MANIFEST':
+      return {
+        ...state,
+        [action.url]: {
+          manifestation: manifesto.create(action.json),
           isFetching: false,
         },
-      });
-    case ActionTypes.RECEIVE_MANIFEST_FAILURE:
-      return Object.assign({}, state, {
-        [action.manifestId]: {
+      };
+    case 'REJECT_MANIFEST':
+      return {
+        ...state,
+        [action.url]: {
           error: action.error,
           isFetching: false,
         },
-      });
+      };
     default: return state;
   }
 };

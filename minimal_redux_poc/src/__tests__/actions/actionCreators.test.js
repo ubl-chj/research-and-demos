@@ -1,8 +1,8 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-
-import * as actions from '../../actions/index';
-import ActionTypes from '../../action-types';
+import fetch from 'jest-fetch-mock';
+import * as actions from '../../actions/actionCreators';
+import ActionTypes from '../../actions/action-types';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -62,27 +62,27 @@ describe('actions', () => {
   });
   describe('requestManifest', () => {
     it('requests a manifest given a url', () => {
-      const id = 'abc123';
+      const url = 'abc123';
       const expectedAction = {
-        type: ActionTypes.REQUEST_MANIFEST,
-        manifestId: id,
+        type: `${ActionTypes.REQUEST}MANIFEST`,
+        url,
       };
-      expect(actions.requestManifest(id)).toEqual(expectedAction);
+      expect(actions.request('MANIFEST', url)).toEqual(expectedAction);
     });
   });
-  describe('receiveManifest', () => {
+  describe('resolveManifest', () => {
     it('moves to the previous canvas', () => {
-      const id = 'abc123';
+      const url = 'abc123';
       const json = {
-        id,
+        url,
         content: 'lots of metadata, canvases, and other IIIFy things',
       };
       const expectedAction = {
-        type: ActionTypes.RECEIVE_MANIFEST,
-        manifestId: id,
-        manifestJson: json,
+        type: `${ActionTypes.RESOLVE}MANIFEST`,
+        url,
+        json,
       };
-      expect(actions.receiveManifest(id, json)).toEqual(expectedAction);
+      expect(actions.resolve('MANIFEST', url, json)).toEqual(expectedAction);
     });
   });
   describe('fetchManifest', () => {
@@ -97,28 +97,28 @@ describe('actions', () => {
       it('dispatches the REQUEST_MANIFEST action', () => {
         store.dispatch(actions.fetchManifest('https://purl.stanford.edu/sn904cj3429/iiif/manifest'));
         expect(store.getActions()).toEqual([
-          { manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest', type: 'REQUEST_MANIFEST' },
+          { url: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest', type: 'REQUEST_MANIFEST' },
         ]);
       });
-      it('dispatches the REQUEST_MANIFEST and then RECEIVE_MANIFEST', () => {
+      it('dispatches the REQUEST_MANIFEST and then RESOLVE_MANIFEST', () => {
         store.dispatch(actions.fetchManifest('https://purl.stanford.edu/sn904cj3429/iiif/manifest'))
           .then(() => {
             const expectedActions = store.getActions();
             expect(expectedActions).toEqual([
-              { manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest', type: 'REQUEST_MANIFEST' },
-              { manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest', manifestJson: { data: '12345' }, type: 'RECEIVE_MANIFEST' },
+              { url: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest', type: 'REQUEST_MANIFEST' },
+              { url: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest', json: { data: '12345' }, type: 'RESOLVE_MANIFEST' },
             ]);
           });
       });
     });
     describe('error response', () => {
-      it('dispatches the REQUEST_MANIFEST and then RECEIVE_MANIFEST', () => {
+      it('dispatches the REQUEST_MANIFEST and then RESOLVE_MANIFEST', () => {
         store.dispatch(actions.fetchManifest('https://purl.stanford.edu/sn904cj3429/iiif/manifest'))
           .then(() => {
             const expectedActions = store.getActions();
             expect(expectedActions).toEqual([
               { manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest', type: 'REQUEST_MANIFEST' },
-              { manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest', error: new Error('invalid json response body at undefined reason: Unexpected end of JSON input'), type: 'RECEIVE_MANIFEST_FAILURE' },
+              { manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest', error: new Error('invalid json response body at undefined reason: Unexpected end of JSON input'), type: 'REJECT_MANIFEST' },
             ]);
           });
       });

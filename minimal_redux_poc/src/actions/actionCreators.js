@@ -1,5 +1,5 @@
-import fetch from 'node-fetch';
-import ActionTypes from '../action-types';
+import ActionTypes from './action-types';
+import fetchV3 from './manifestRequestUtils';
 
 /**
  * Action Creators for Mirador
@@ -89,44 +89,47 @@ export function previousCanvas(windowId) {
 }
 
 /**
- * requestManifest - action creator
+ * request - action creator
  *
- * @param  {String} manifestId
  * @memberof ActionCreators
+ * @param id
+ * @param url
  */
-export function requestManifest(manifestId) {
+export function request(id, url) {
   return {
-    type: ActionTypes.REQUEST_MANIFEST,
-    manifestId,
+    type: ActionTypes.REQUEST + id,
+    url,
   };
 }
 
 /**
- * receiveManifest - action creator
+ * resolve - action creator
  *
- * @param  {String} windowId
- * @param  {Object} manifestJson
+ * @param id
+ * @param  {String} url
+ * @param  {Object} json
  * @memberof ActionCreators
  */
-export function receiveManifest(manifestId, manifestJson) {
+export function resolve(id, url, json) {
   return {
-    type: ActionTypes.RECEIVE_MANIFEST,
-    manifestId,
-    manifestJson,
+    type: ActionTypes.RESOLVE + id,
+    url,
+    json,
   };
 }
 
 /**
- * receiveManifestFailure - action creator
+ * reject - action creator
  *
- * @param  {String} windowId
+ * @param id
+ * @param url
  * @param  {String} error
  * @memberof ActionCreators
  */
-export function receiveManifestFailure(manifestId, error) {
+export function reject(id, url, error) {
   return {
-    type: ActionTypes.RECEIVE_MANIFEST_FAILURE,
-    manifestId,
+    type: ActionTypes.REJECT + id,
+    url,
     error,
   };
 }
@@ -134,15 +137,12 @@ export function receiveManifestFailure(manifestId, error) {
 /**
  * fetchManifest - action creator
  *
- * @param  {String} manifestId
+ * @param  {String} url
  * @memberof ActionCreators
  */
-export function fetchManifest(manifestId) {
+export function fetchManifest(url) {
   return ((dispatch) => {
-    dispatch(requestManifest(manifestId));
-    return fetch(manifestId)
-      .then(response => response.json())
-      .then(json => dispatch(receiveManifest(manifestId, json)))
-      .catch(error => dispatch(receiveManifestFailure(manifestId, error)));
+    dispatch(request('MANIFEST', url));
+    return fetchV3(url, dispatch);
   });
 }

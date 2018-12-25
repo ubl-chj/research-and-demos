@@ -1,5 +1,5 @@
 import reducer from '../../reducers/config';
-import ActionTypes from '../../action-types';
+import ActionTypes from '../../actions/action-types';
 
 describe('config reducer', () => {
   describe('SET_CONFIG', () => {

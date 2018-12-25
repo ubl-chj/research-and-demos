@@ -7,7 +7,7 @@ import fixture from '../fixtures/2.json';
 describe('Workspace', () => {
   let wrapper;
   beforeEach(() => {
-    store.dispatch(actions.receiveManifest('foo', fixture));
+    store.dispatch(actions.resolve('MANIFEST', 'foo', fixture));
     store.dispatch(actions.addWindow({ manifestId: 'foo' }));
     wrapper = shallow(<Workspace store={store} />).dive();
   });

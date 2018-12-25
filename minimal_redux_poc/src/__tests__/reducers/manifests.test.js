@@ -1,18 +1,18 @@
 import reducer from '../../reducers/manifests';
-import ActionTypes from '../../action-types';
+import ActionTypes from '../../actions/action-types';
 
 describe('manifests reducer', () => {
   it('should handle REQUEST_MANIFEST', () => {
     expect(reducer({}, {
-      type: ActionTypes.REQUEST_MANIFEST,
-      manifestId: 'abc123',
+      type: `${ActionTypes.REQUEST}MANIFEST`,
+      url: 'abc123',
     })).toEqual({
       abc123: {
         isFetching: true,
       },
     });
   });
-  it('should handle RECEIVE_MANIFEST', () => {
+  it('should handle RESOLVE_MANIFEST', () => {
     expect(reducer(
       {
         abc123: {
@@ -20,9 +20,9 @@ describe('manifests reducer', () => {
         },
       },
       {
-        type: ActionTypes.RECEIVE_MANIFEST,
-        manifestId: 'abc123',
-        manifestJson: {
+        type: `${ActionTypes.RESOLVE}MANIFEST`,
+        url: 'abc123',
+        json: {
           id: 'abc123',
           '@type': 'sc:Manifest',
           content: 'lots of canvases and metadata and such',
@@ -35,7 +35,7 @@ describe('manifests reducer', () => {
       },
     });
   });
-  it('should handle RECEIVE_MANIFEST_FAILURE', () => {
+  it('should handle REJECT MANIFEST', () => {
     expect(reducer(
       {
         abc123: {
@@ -43,8 +43,8 @@ describe('manifests reducer', () => {
         },
       },
       {
-        type: ActionTypes.RECEIVE_MANIFEST_FAILURE,
-        manifestId: 'abc123',
+        type: `${ActionTypes.REJECT}MANIFEST`,
+        url: 'abc123',
         error: "This institution didn't enable CORS.",
       },
     )).toEqual({

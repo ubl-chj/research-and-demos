@@ -8,7 +8,7 @@ describe('Window', () => {
   let wrapper;
   let window;
   beforeEach(() => {
-    store.dispatch(actions.receiveManifest('foo', fixture));
+    store.dispatch(actions.resolve('MANIFEST', 'foo', fixture));
     store.dispatch(actions.addWindow({ manifestId: 'foo' }));
     [window] = store.getState().windows;
     wrapper = mount(

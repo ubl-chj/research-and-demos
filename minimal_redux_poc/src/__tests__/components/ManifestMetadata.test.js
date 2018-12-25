@@ -8,7 +8,7 @@ describe('ManifestMetadata', () => {
   let wrapper;
   let manifest;
   beforeEach(() => {
-    store.dispatch(actions.receiveManifest('foo', fixture));
+    store.dispatch(actions.resolve('MANIFEST', 'foo', fixture));
     manifest = store.getState().manifests.foo;
     wrapper = shallow(<ManifestMetadata manifest={manifest} />);
   });

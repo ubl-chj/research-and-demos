@@ -56,11 +56,13 @@ class ManifestForm extends Component {
     const { formValue } = this.state;
     return (
       <form onSubmit={this.formSubmit}>
-        <input
+        <textarea
           value={formValue}
           id="manifestURL"
           type="text"
           onChange={this.handleInputChange}
+          cols="30"
+          rows="5"
         />
         <button id="fetchBtn" type="submit">FetchManifest</button>
       </form>
