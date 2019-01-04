@@ -1,0 +1,13 @@
+
+  \{^_^}/ hi!
+
+  Loading ./cypress/fixtures/db.json
+  Done
+
+  Resources
+
+  Home
+  http://localhost:5000
+
+  Type s + enter at any time to create a snapshot of the database
+Cannot bind to the port 5000. Please specify another port number either through --port argument or through the json-server.json configuration file
